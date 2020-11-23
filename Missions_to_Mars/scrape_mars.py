@@ -3,25 +3,23 @@ from bs4 import BeautifulSoup
 from splinter import Browser
 import pandas as pd
 import os
-import time
 import requests
 from webdriver_manager.chrome import ChromeDriverManager
 
-def start_browser():
-# Set Executable Path & Initialize Chrome driver
+# ## NASA MARS NEWS ## #
 
-executable_path = {'executable_path':"chromedriver.exe"}
-browser = Browser('chrome', **executable_path, headless=False)
-
-
-# Create python dictionary that can be imported into Mongo
+# Create python dictionary to hold scraped data that can be imported into Mongo
 mars_news = {}
 mars_urls = []
 
-# NASA MARS NEWS
+def start_browser():
+# Set Executable Path & Initialize Chrome driver
+    executable_path = {'executable_path':"chromedriver.exe"}
+    browser = Browser('chrome', **executable_path, headless=False)
 
-def scrape_news():
 # Visit the NASA Mars News Site
+def scrape_news():
+
     url = "https://mars.nasa.gov/news/"
     browser.visit(url)
 
@@ -41,18 +39,13 @@ def scrape_news():
     browser.quit()
     return mars_news
 
-    # ## JPL Mars Space Images
-
+# JPL Mars Space Images
+def scrape_img():
+    
+    browser = start_browser()
     img_url = "https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars"
+
     browser.visit(img_url)
-
-    browser.quit()
-
-    # In[7]:
-
-
-    # Use splinter to navigate the site and find the image url for the current Featured Mars Image 
-    # and assign the url string to a variable
 
     img_html = browser.html
 
@@ -64,25 +57,23 @@ def scrape_news():
 
     featured_image_url = root_img_url + parsed_img_url
 
-    featured_image_url
+    mars_news['featured_image_url']=featured_image_url
 
+    browser.quit()
 
-    # ## Mars Facts
+    return mars_news
 
-    # In[8]:
+# Mars Facts
+def scrape_marsfact():
 
+    browser = start_browser()
 
     fact_url = "https://space-facts.com/mars/"
+
     browser.visit(fact_url)
 
     # Use Pandas to scrape the table fact 
     tables = pd.read_html(fact_url)
-
-    tables                       
-
-
-    # In[9]:
-
 
     # tables - find Mars Facts
     fact_df = tables[1]
@@ -91,33 +82,25 @@ def scrape_news():
     fact_df.columns = ["Mars_Earth_Comparison", 'Mars_Fact', 'Earth_Fact']
 
     fact_df.set_index('Mars_Earth_Comparison', inplace=True)
-
-    fact_df
-        
-
-
-    # In[10]:
-
-
+    
     # Convert the dataframe to html
     fact_html_tb = fact_df.to_html(classes = 'table table-striped')
 
-    fact_html_tb
-
-
-    # In[11]:
-
-
-    # Strip unwanted new lines
     fact_html_tb.replace('\n', '')
 
+    mars_news['mars_fact']=fact_html_tb
 
-    # ## Mars Hemispheres
+    browser.quit()
 
-    # ## Cerberus Hemisphere Enhanced
+    return mars_news
 
-    # In[12]:
 
+# ## Mars Hemispheres ## #
+
+# Cerberus Hemisphere Enhanced
+def scrape_cerhemi():
+
+    browser = start_browser()
 
     cer_url = 'https://astrogeology.usgs.gov/search/map/Mars/Viking/cerberus_enhanced'
 
@@ -126,13 +109,18 @@ def scrape_news():
     cer_soup = BeautifulSoup(cer_html, "html.parser")
     cer_url = cer_soup.find_all('div', class_= 'downloads')[0].li.a.get('href')
 
-    cer_url
+    # initialize
+    mars_news['hemisphere_url']=mars_urls
+    
+    mars_urls.append([{"title": "Cerberus Hemisphere", "img_url": cer_url}])
 
+    browser.quit()
+    return mars_news
 
-    # ## Schiaparelli Hemisphere Enhanced
+# Schiaparelli Hemisphere Enhanced
+def scrape_schhemi():
 
-    # In[13]:
-
+    browser = start_browser()
 
     sch_url = 'https://astrogeology.usgs.gov/search/map/Mars/Viking/schiaparelli_enhanced'
 
@@ -140,14 +128,17 @@ def scrape_news():
     sch_html = browser.html
     sch_soup = BeautifulSoup(sch_html, "html.parser")
     sch_url = sch_soup.find_all('div', class_= 'downloads')[0].li.a.get('href')
+    
+    mars_urls.append([{"title": "Schiaparelli Hemisphere", "img_url": sch_url}])
 
-    sch_url
+    
+    browser.quit()
+    return mars_news
 
+# Syrtis Major Hemisphere Enhanced
+def scrape_smhemi():
 
-    # ## Syrtis Major Hemisphere Enhanced
-
-    # In[14]:
-
+    browser = start_browser()
 
     sm_url = 'https://astrogeology.usgs.gov/search/map/Mars/Viking/syrtis_major_enhanced'
 
@@ -156,13 +147,15 @@ def scrape_news():
     sm_soup = BeautifulSoup(sm_html, "html.parser")
     sm_url = sm_soup.find_all('div', class_= 'downloads')[0].li.a.get('href')
 
-    sm_url
+    mars_urls.append([{"title": "Syrtis Major Hemisphere", "img_url": sm_url}])
 
+    browser.quit()
+    return mars_news
 
-    # ##  Valles Marineris Hemisphere Enhanced
+# Valles Marineris Hemisphere Enhanced
+def scrape_vmhemi():
 
-    # In[15]:
-
+    browser = start_browser()
 
     vm_url = 'https://astrogeology.usgs.gov/search/map/Mars/Viking/valles_marineris_enhanced'
 
@@ -171,25 +164,7 @@ def scrape_news():
     vm_soup = BeautifulSoup(vm_html, "html.parser")
     vm_url = vm_soup.find_all('div', class_= 'downloads')[0].li.a.get('href')
 
-    vm_url
+    mars_urls.append([{"title": "Valles Marineris Hemisphere", "img_url": vm_url}])
 
-
-    # In[16]:
-
-
-    # Create a dictionary with hemisphere title and full imagine url
-    hemisphere_image_urls = [
-        {"title": "Valles Marineris Hemisphere", "img_url": vm_url},
-        {"title": "Cerberus Hemisphere", "img_url": cer_url},
-        {"title": "Schiaparelli Hemisphere", "img_url": sch_url},
-        {"title": "Syrtis Major Hemisphere", "img_url": sm_url},
-    ]
-
-    hemisphere_image_urls
-
-
-    # In[17]:
-
-
-browser.quit()
-
+    browser.quit()
+    return mars_news
