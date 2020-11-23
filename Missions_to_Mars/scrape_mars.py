@@ -57,8 +57,10 @@ def scrape_img():
 
     img_soup = BeautifulSoup(img_html, "html.parser")
 
-    parsed_img_url = img_soup.find('div', class_="carousel_items").find('article')['style'].    replace('background-image: url(', '').replace(');', '')[1:-1]
 
+
+    parsed_img_url = img_soup.find('div', class_="carousel_items").find('article')['style'].replace('background-image: url(', '').replace(');', '')[1:-1]
+    
     root_img_url = "http://www.jpl.nasa.gov"
 
     featured_image_url = root_img_url + parsed_img_url

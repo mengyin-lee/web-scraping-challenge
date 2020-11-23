@@ -1,0 +1,8 @@
+img{
+    vertical-align: middle;
+    height:500px;
+    width: 500px;
+}
+.border {
+    border-right:1px solod black;
+}

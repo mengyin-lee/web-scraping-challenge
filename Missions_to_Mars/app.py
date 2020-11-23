@@ -1,8 +1,7 @@
 # Set up dependences
 from flask import Flask, render_template
-from flask import redirect
 from flask import request
-#from flask_pymongo import PyMongo
+from flask import redirect
 import scrape_mars
 from pymongo import MongoClient
 import pymongo
@@ -25,7 +24,7 @@ def index():
     mars = db.mars.find_one()
     
     # Return template and data
-    return render_template("templates/index.html", mars = mars)
+    return render_template("index.html", mars = mars)
 
 # Route that will trigger the scrape function    
 @app.route("/scrape")
