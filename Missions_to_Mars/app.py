@@ -1,9 +1,8 @@
 # Set up dependences
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template
 from flask import redirect
 from flask import request
-from flask_pymongo import PyMongo
+#from flask_pymongo import PyMongo
 import scrape_mars
 from pymongo import MongoClient
 import pymongo
@@ -13,32 +12,20 @@ import pymongo
 # app = Flask(__name__, template_folder='../templates')
 app = Flask(__name__)
 
-# Use PyMongo to establish Mongo Connection
-# mongo = PyMongo(app, uri="mongodb://localhost:27017/mars")
+# Initialize PyMongo to work with MongoDBs
+conn = 'mongodb://localhost:27017'
+client = pymongo.MongoClient(conn)
 
-# Elie said to try using this, might solve "jinja error" 
-# app.config["MONGO_URI"] = "mongodb://localhost:27017/mission_to_mars"
-app.config["MONGO_URI"] = "mongodb://localhost:27017/mars"
-mongo = PyMongo(app)
+db = client.mars_db
+collection = db.mars
 
-# conn = "mongodb://localhost:27017/mission_to_mars"
-
-# client = pymongo.MongoClient(conn)
-
-# Route to render index.html template using data from Mongo
 @app.route("/")
 def index():
-    # FLASK TEST, CHECKING FOR CONNECTION 
-    # return "<h1>Mission To Mars - THE APP IS RUNNING!</h>"
 
-    # Find one record  of data from the Mongo Database
-    # mars = mongo.db.collections.find_one()
-    
-    # mars = client.db.mars.find_one()
-    mars = mongo.db.mars.find_one()
+    mars = db.mars.find_one()
     
     # Return template and data
-    return render_template("index.html", mars = mars)
+    return render_template("templates/index.html", mars = mars)
 
 # Route that will trigger the scrape function    
 @app.route("/scrape")
@@ -46,18 +33,17 @@ def scrape():
 
     # Run the scrape function
     # mars = client.db.mars
-    mars = mongo.db.mars
-    mars_web = scrape_mars.scrape_news()
-    mars_web = scrape_mars.scrape_marsImage()
-    mars_web = scrape_mars.scrape_marsTwitter()
-    mars_web = scrape_mars.scrape_marsFacts()
-    mars_web = scrape_mars.scrape_marsH1Cerberus()
-    mars_web = scrape_mars.scrape_marsH2Schiaparelli()
-    mars_web = scrape_mars.scrape_marsH3SyrtisMajor()
-    mars_web = scrape_mars.scrape_marsH4VallesMarineris()
+    mars = db.mars
+    mars_news = scrape_mars.scrape_news()
+    mars_news = scrape_mars.scrape_img()
+    mars_news = scrape_mars.scrape_marsfact()
+    mars_news = scrape_mars.scrape_cerhemi()
+    mars_news = scrape_mars.scrape_schhemi()
+    mars_news = scrape_mars.scrape_smhemi()
+    mars_news  = scrape_mars.scrape_vmhemi()
     
     # Update the Mongo Database using update and upsert=True
-    mars.update({}, mars_web, upsert=True)
+    mars.update({}, mars_news, upsert=True)
     
     # Redirect back to home page
     return redirect("/", code=302)

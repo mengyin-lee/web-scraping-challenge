@@ -4,7 +4,7 @@ from splinter import Browser
 import pandas as pd
 import os
 import requests
-from webdriver_manager.chrome import ChromeDriverManager
+# from webdriver_manager.chrome import ChromeDriverManager
 
 # ## NASA MARS NEWS ## #
 
@@ -13,14 +13,18 @@ mars_news = {}
 mars_urls = []
 
 def start_browser():
+
 # Set Executable Path & Initialize Chrome driver
     executable_path = {'executable_path':"chromedriver.exe"}
-    browser = Browser('chrome', **executable_path, headless=False)
+
+    return Browser('chrome', **executable_path, headless=False)
 
 # Visit the NASA Mars News Site
 def scrape_news():
 
     url = "https://mars.nasa.gov/news/"
+
+    browser = start_browser()
     browser.visit(url)
 
     nasa_html = browser.html
@@ -37,12 +41,14 @@ def scrape_news():
     mars_news['latest_news_p']=latest_news_p
 
     browser.quit()
+
     return mars_news
 
 # JPL Mars Space Images
 def scrape_img():
     
     browser = start_browser()
+
     img_url = "https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars"
 
     browser.visit(img_url)
