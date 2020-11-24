@@ -11,12 +11,17 @@
 
 ## *Step2* 
 > MongoDB and Flask Application
->> 1.Run 'ipython nbconvert --to script mission_to_mars.ipynb
->> 2.Get mission_to_mars.py -> Rename to scrape_mars.py
->> 3.Modify scrape_mars.py to include functions and return scraped mars data
->> 4.Create app.py, including a route called /scrape that imports 'scrape_mars.py' script and call 'scrape' function
->> 5.Store the return scraped mars data in Mongo as a Python dictionary
->> 6.Create index.html in 'templates' directory that takes the mars data dictionary and display all of the data in the assigned html elements.
+>> * Run 'ipython nbconvert --to script mission_to_mars.ipynb
+>> * Get mission_to_mars.py -> Rename to scrape_mars.py
+>> * Modify scrape_mars.py to include functions and return scraped mars data
+>> * Create app.py, including a route called /scrape that imports 'scrape_mars.py' script and call 'scrape' function
+>> * Store the return scraped mars data in Mongo as a Python dictionary
+>> * Create index.html in 'templates' directory that takes the mars data dictionary and display all of the data in the assigned html elements.
+
+## *Output*
+>  Data export and webpage commited in the repository for reference
+>> * filename: 'MongoDB mars collection export'
+>> * filename: 'Mars Data' webpage 
 
 
 
