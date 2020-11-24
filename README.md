@@ -18,10 +18,11 @@
 >> * Store the return scraped mars data in Mongo as a Python dictionary
 >> * Create index.html in 'templates' directory that takes the mars data dictionary and display all of the data in the assigned html elements.
 
-## *Output*
+## *Output location*
 >  Data export and webpage commited in the repository for reference
->> * filename: 'MongoDB mars collection export'
->> * filename: 'Mars Data' webpage 
+>> * Mongo data file: 'mars_db_collection_export.json'
+>> * file folder: 'Mars Data_files'
+>> * file folder: 'snapshots'
 
 
 
