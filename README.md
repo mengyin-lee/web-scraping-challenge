@@ -3,7 +3,7 @@
 ## Date: 11/24/2020
 
 ## *Step1*
-> Juputer Notebook mission_to_mars.ipynb - Scraping using BeautifulSoup, Splinter, Pandas
+> Jupyter Notebook mission_to_mars.ipynb - Scraping using BeautifulSoup, Splinter, Pandas
 >> * NASA Mars News Site
 >> * JPL Mars Space Images - Featured Image - Image changes when 'Scrape Mars Web Data' botton is clicked
 >> * Mars Facts 
